@@ -35,7 +35,7 @@ public class User implements UserDetails {
 
         @Enumerated(EnumType.STRING)
         @Column(nullable = false)
-        private Role role; // /CLIENTE, /ENTREGADOR , /ADMIN
+        private Role role; // /CLIENTE /ENTREGADOR /ADMIN
 
         @Override
         public Collection<? extends GrantedAuthority> getAuthorities() {
