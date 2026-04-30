@@ -2,6 +2,7 @@ package br.com.pires.api_gerenciamento_de_pedidos.model;
 
 import br.com.pires.api_gerenciamento_de_pedidos.model.enums.StatusPedido;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "pedido")
+@Table(name = "pedidos")
 @Getter @Setter
 @NoArgsConstructor
 public class Pedido {
@@ -32,7 +33,7 @@ public class Pedido {
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ItemPedido> itens = new ArrayList<>();
 
-    @Column(nullable = false)
+    @NotBlank
     private String enderecoEntrega;
 
     @Enumerated(EnumType.STRING)

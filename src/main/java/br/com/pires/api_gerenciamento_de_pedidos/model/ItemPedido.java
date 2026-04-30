@@ -15,23 +15,23 @@ import java.math.BigDecimal;
 @Setter
 @Getter
 @NoArgsConstructor
-@Table(name  = "ItemPedido")
-public class ItemPedido extends Pedido {
+@Table(name  = "Item_Pedido")
+public class ItemPedido {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
     @NotBlank
     private String descricao;
 
     @NotNull
     private BigDecimal precoUnitario;
 
-    @ManyToOne(fetch = FetchType.LAZY)
     @Min(1)
     private int quantidade;
 
-    public void setPedido(Pedido pedido) {}
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name= "pedido_id")
+    private Pedido pedido;
 }
