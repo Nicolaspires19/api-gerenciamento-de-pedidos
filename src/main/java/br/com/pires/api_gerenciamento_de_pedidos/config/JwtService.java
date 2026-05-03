@@ -18,7 +18,7 @@ import java.util.function.Function;
 public class JwtService {
 
     @Value("${jwt.secret}")
-    private static String secret;
+    private String secret;
 
     @Value("${jwt.expiration}")
     private long expiration;
@@ -41,16 +41,18 @@ public class JwtService {
         return claimsResolver.apply(claims);
     }
 
-    public static boolean tokenValido(String token, UserDetails userDetails) {
+    public boolean tokenValido(String token, UserDetails userDetails) {
         try {
+            String emailDoToken = extrairEmail(token);
             Claims claims = getClaims(token);
-            return !claims.getExpiration().before(new Date());
+            return emailDoToken.equals(userDetails.getUsername())
+                    && !claims.getExpiration().before(new Date());
         } catch (JwtException | IllegalArgumentException e) {
             return false;
         }
     }
 
-    private static Claims getClaims(String token) {
+    private Claims getClaims(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(getKey())
                 .build()
@@ -58,7 +60,7 @@ public class JwtService {
                 .getBody();
     }
 
-    private static SecretKey getKey() {
+    private SecretKey getKey() {
         return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 

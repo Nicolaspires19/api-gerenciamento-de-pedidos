@@ -1,13 +1,13 @@
 package br.com.pires.api_gerenciamento_de_pedidos.model;
 
+import br.com.pires.api_gerenciamento_de_pedidos.model.enums.Role;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.*;
-import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import br.com.pires.api_gerenciamento_de_pedidos.model.enums.Role;
 import java.util.Collection;
 import java.util.List;
 
@@ -25,13 +25,13 @@ public class User implements UserDetails {
         private Long id;
 
         @Column(nullable = false)
-        private String nome;
+        private String name;
 
         @Column(unique = true, nullable = false)
         private String email;
 
         @Column(nullable = false)
-        private String senha;
+        private String password ;
 
         @Enumerated(EnumType.STRING)
         @Column(nullable = false)
@@ -44,12 +44,12 @@ public class User implements UserDetails {
 
         @Override
         public @Nullable String getPassword() {
-                return "";
+                return password;
         }
 
         @Override
         public String getUsername() {
-                return this.email;
+                return email;
         }
 
         @Override

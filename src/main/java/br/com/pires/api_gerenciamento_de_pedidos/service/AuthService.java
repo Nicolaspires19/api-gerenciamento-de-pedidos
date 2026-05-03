@@ -29,15 +29,15 @@ public class AuthService {
         }
 
         var user = User.builder()
-                .nome(request.name())
+                .name(request.name())
                 .email(request.email())
-                .senha(passwordEncoder.encode(request.password()))
+                .password(passwordEncoder.encode(request.password()))
                 .role(Role.valueOf(request.role().toUpperCase()))
                 .build();
 
         userRepository.save(user);
 
-        var jwtToken = jwtService.gerarToken(String.valueOf(user));
+        var jwtToken = jwtService.gerarToken(user.getEmail());
         return new LoginResponseDTO(jwtToken, "Bearer");
     }
 
@@ -52,7 +52,7 @@ public class AuthService {
         var user = userRepository.findByEmail(request.email())
                 .orElseThrow();
 
-        var jwtToken = jwtService.gerarToken(String.valueOf(user));
+        var jwtToken = jwtService.gerarToken(user.getEmail());
         return new LoginResponseDTO(jwtToken, "Bearer");
     }
 
