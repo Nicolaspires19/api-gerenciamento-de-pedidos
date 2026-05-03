@@ -1,13 +1,10 @@
 package br.com.pires.api_gerenciamento_de_pedidos.exceptions;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
-import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -27,17 +24,7 @@ public class GlobalExceptionHandler {
                         HttpStatus.NOT_FOUND.value(),
                         "Recurso não encontrado",
                         ex.getMessage()
-                ) {
-                    @Override
-                    public HttpStatusCode getStatusCode() {
-                        return null;
-                    }
-
-                    @Override
-                    public ProblemDetail getBody() {
-                        return null;
-                    }
-                });
+                ));
     }
 
     // 422 — Transição de status inválida
@@ -49,24 +36,12 @@ public class GlobalExceptionHandler {
                         HttpStatus.UNPROCESSABLE_ENTITY.value(),
                         "Operação inválida",
                         ex.getMessage()
-                ) {
-                    @Override
-                    public HttpStatusCode getStatusCode() {
-                        return null;
-                    }
-
-                    @Override
-                    public ProblemDetail getBody() {
-                        return null;
-                    }
-                });
+                ));
     }
 
-    // 400 — Erros de validação dos campos (@Valid)
+    // 400 — Erros de validação
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ValidationErrorResponse> handleValidation(
-            MethodArgumentNotValidException ex) {
-
+    public ResponseEntity<ValidationErrorResponse> handleValidation(MethodArgumentNotValidException ex) {
         Map<String, String> campos = new HashMap<>();
         for (FieldError error : ex.getBindingResult().getFieldErrors()) {
             campos.put(error.getField(), error.getDefaultMessage());
@@ -82,7 +57,7 @@ public class GlobalExceptionHandler {
                 ));
     }
 
-    // 401 — Credenciais inválidas no login
+    // 401 — Credenciais inválidas
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ErrorResponse> handleBadCredentials(BadCredentialsException ex) {
         return ResponseEntity
@@ -91,17 +66,7 @@ public class GlobalExceptionHandler {
                         HttpStatus.UNAUTHORIZED.value(),
                         "Não autorizado",
                         "Email ou senha incorretos"
-                ) {
-                    @Override
-                    public HttpStatusCode getStatusCode() {
-                        return null;
-                    }
-
-                    @Override
-                    public ProblemDetail getBody() {
-                        return null;
-                    }
-                });
+                ));
     }
 
     // 401 — Usuário não encontrado
@@ -113,20 +78,10 @@ public class GlobalExceptionHandler {
                         HttpStatus.UNAUTHORIZED.value(),
                         "Não autorizado",
                         ex.getMessage()
-                ) {
-                    @Override
-                    public HttpStatusCode getStatusCode() {
-                        return null;
-                    }
-
-                    @Override
-                    public ProblemDetail getBody() {
-                        return null;
-                    }
-                });
+                ));
     }
 
-    // 409 — Conflito (email já cadastrado)
+    // 409 — Conflito (Email em uso)
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResponse> handleIllegalArgument(IllegalArgumentException ex) {
         return ResponseEntity
@@ -135,20 +90,10 @@ public class GlobalExceptionHandler {
                         HttpStatus.CONFLICT.value(),
                         "Conflito",
                         ex.getMessage()
-                ) {
-                    @Override
-                    public HttpStatusCode getStatusCode() {
-                        return null;
-                    }
-
-                    @Override
-                    public ProblemDetail getBody() {
-                        return null;
-                    }
-                });
+                ));
     }
 
-    // 500 — Erro genérico inesperado
+    // 500 — Erro genérico
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGeneric(Exception ex) {
         return ResponseEntity
@@ -156,17 +101,7 @@ public class GlobalExceptionHandler {
                 .body(new ErrorResponse(
                         HttpStatus.INTERNAL_SERVER_ERROR.value(),
                         "Erro interno",
-                        "Ocorreu um erro inesperado. Tente novamente mais tarde."
-                ) {
-                    @Override
-                    public HttpStatusCode getStatusCode() {
-                        return null;
-                    }
-
-                    @Override
-                    public ProblemDetail getBody() {
-                        return null;
-                    }
-                });
+                        "Ocorreu um erro inesperado."
+                ));
     }
 }
